@@ -9,47 +9,47 @@ import {
 } from 'react-native';
 import CustomInput from '../common/CustomInput';
 import CustomButton from '../common/CustumButton';
+import { Fonts } from '../assets/fonts/Customfont';
+import CardWrapper from '../common/CardWrapper';
 
 const LoginScreen = ({navigation}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   return (
     <TouchableWithoutFeedback>
+      <CardWrapper>
       <View style={styles.container}>
         <Text style={styles.title}>Login</Text>
-        {/* <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-      /> */}
+        
         <CustomInput
           label="Full Name"
           value={name}
           onChange={val => setName(val)}
         />
+
         <CustomInput
           label="Password"
           value={password}
           onChange={val => setPassword(val)}
         />
-        {/* <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        autoCapitalize="none"
-      /> */}
-        <Button title="Login" onPress={() => alert('Login pressed')} />
+
         <View style={styles.signupContainer}>
-          <Text>Don't have an account? </Text>
+          <Text style={styles.note}>Already have an account? <Text style={styles.textbtn}>Log In</Text></Text>
            <CustomButton title={"Login"} onPress={() => {}} />
         </View>
       </View>
+      </CardWrapper>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  textbtn:{
+    fontFamily:Fonts.
+  },
+  note:{
+    fontFamily:Fonts.inter400
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

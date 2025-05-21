@@ -80,9 +80,9 @@ const CustomInput: React.FC<CustomInputProps> = ({
   };
 
   const inputContent = {
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 21.6,
-    // fontFamily: CustomFont.Urbanist400,
+    fontFamily: Fonts.inter700,
     color: colors.textPrimary,
     backgroundColor: 'transparent',
     margin: Platform.select({ios: 3, android: 3}),
@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
   },
   labelText: {
     color: 'rgba(250, 250, 250, 0.5)',
+    fontFamily:Fonts.inter700
   },
   iconEye: {
     width: 24,
