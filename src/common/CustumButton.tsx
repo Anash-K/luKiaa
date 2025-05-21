@@ -1,12 +1,18 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { colors } from '../constants/colors';
 
-const CustomButton = ({title, onPress}) => {
+interface CustomButtonType{
+  title: string;
+  onPress: () => void;
+}
+
+const CustomButton:React.FC<CustomButtonType> = ({title, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
       <LinearGradient
-        colors={['#6B48FF', '#FF6B6B']} // Gradient from purple to pink
+        colors={[colors.gradientstartColor,colors.gradientendColor ]} // Gradient from purple to pink
         start={{x: 0, y: 0}} // Gradient starts from the left
         end={{x: 1, y: 0}} // Gradient ends on the right
         style={styles.gradient}>

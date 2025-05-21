@@ -6,5 +6,7 @@ export const colors = {
     textPrimary: "#2B2B2B",
     textSecondary: "#6C6C6C",
     success: "#4ADE80",
-    errorAlert: "#F87171"
+    errorAlert: "#F87171",
+    gradientstartColor:'#6B48FF',
+    gradientendColor:'#FF6B6B'
   };

@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {FloatingLabelInput} from 'react-native-floating-label-input';
 import { colors } from '../constants/colors';
+import { Fonts } from '../assets/fonts/Customfont';
 
 
 interface CustomInputProps {
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     textTransform: 'capitalize',
     fontSize: 18,
-    // fontFamily: CustomFont.Urbanist400,
+    // fontFamily: Fonts.inter400,
     lineHeight: 16.8,
     color: 'red',
   },
