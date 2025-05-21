@@ -4,13 +4,23 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {colors} from './src/constants/colors';
+export type StackParams = {
+  Login: undefined;
+  Signup: undefined;
+};
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator<StackParams>();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={() => ({
+          contentStyle: styles.commonContentStyle,
+        })}>
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -27,21 +37,8 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  commonContentStyle: {
+    backgroundColor: colors.background,
   },
 });
 

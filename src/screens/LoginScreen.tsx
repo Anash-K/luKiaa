@@ -1,28 +1,51 @@
-import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import CustomInput from '../common/CustomInput';
+import CustomButton from '../common/CustumButton';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
+    <TouchableWithoutFeedback>
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        {/* <TextInput
         style={styles.input}
         placeholder="Email"
         keyboardType="email-address"
         autoCapitalize="none"
-      />
-      <TextInput
+      /> */}
+        <CustomInput
+          label="Full Name"
+          value={name}
+          onChange={val => setName(val)}
+        />
+        <CustomInput
+          label="Password"
+          value={password}
+          onChange={val => setPassword(val)}
+        />
+        {/* <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry
         autoCapitalize="none"
-      />
-      <Button title="Login" onPress={() => alert('Login pressed')} />
-      <View style={styles.signupContainer}>
-        <Text>Don't have an account? </Text>
-        <Button title="Sign Up" onPress={() => navigation.navigate('Signup')} />
+      /> */}
+        <Button title="Login" onPress={() => alert('Login pressed')} />
+        <View style={styles.signupContainer}>
+          <Text>Don't have an account? </Text>
+           <CustomButton title={"Login"} onPress={() => {}} />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
