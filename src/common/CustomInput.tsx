@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -14,9 +14,10 @@ import {
   Platform,
 } from 'react-native';
 import {FloatingLabelInput} from 'react-native-floating-label-input';
-import { colors } from '../constants/colors';
-import { Fonts } from '../assets/fonts/Customfont';
-
+import {colors} from '../constants/colors';
+import {Fonts} from '../assets/fonts/Customfont';
+import {useCommonStyles} from './CommonStyle';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 interface CustomInputProps {
   value?: string;
@@ -38,134 +39,120 @@ interface CustomInputProps {
   isDisabled?: boolean;
 }
 
-const CustomInput: React.FC<CustomInputProps> = ({
-  inputConfigurations,
-  inputBoxStyle,
-  label,
-  onChange,
-  isPassword,
-  handleIconAction,
-  showIcon,
-  iconSource,
-  iconStyle,
-  customPressableStyle,
-  isDisabled = false,
-}) => {
-  const [isSecure] = useState(true);
+const CustomInput = forwardRef<any, CustomInputProps>(
+  (
+    {
+      inputConfigurations,
+      inputBoxStyle,
+      label,
+      onChange,
+      isPassword,
+      handleIconAction,
+      showIcon,
+      iconSource,
+      iconStyle,
+      customPressableStyle,
+      isDisabled = false,
+    },
+    ref,
+  ) => {
+    const [isSecure] = useState(true);
+    const {disabledInputContentStyle, inputContent} = useCommonStyles();
 
-  const InputStyle = isDisabled
-    ? [
-        styles.disabledInputStyle,
-        {
-          backgroundColor:  colors.background
-        },
-      ]
-    : [
-        styles.input,
-        {
-          backgroundColor: colors.background
-        },
-      ];
-
-  const disabledInputContentStyle = {
-    fontSize: 18,
-    lineHeight: 21.6,
-    // fontFamily: ''
-    color: colors.textSecondary,
-    backgroundColor: 'transparent',
-    margin: Platform.select({ios: 3, android: 3}),
-    marginVertical: Platform.select({ios: 3, android: 3}),
-    // paddingVertical: Platform.select({ios: 5, android: 5}),
-    paddingHorizontal: 16,
-  };
-
-  const inputContent = {
-    fontSize: 16,
-    lineHeight: 21.6,
-    fontFamily: Fonts.inter700,
-    color: colors.textPrimary,
-    backgroundColor: 'transparent',
-    margin: Platform.select({ios: 3, android: 3}),
-    marginVertical: Platform.select({ios: 3, android: 3}),
-    // paddingVertical: Platform.select({ios: 5, android: 5}),
-    paddingHorizontal: 16,
-  };
-
-  const InputContentStyle = isDisabled
-    ? disabledInputContentStyle
-    : inputContent;
-
-  return (
-    <View style={[styles.container, inputBoxStyle]}>
-      <View style={styles.inputContainer}>
-        <FloatingLabelInput
-          label={
-            (
-              <Text
-                style={[
-                  styles.labelText,
-                  {
-                    color: colors.textPrimary,
-                  },
-                ]}>
-                {label}
-              </Text>
-            ) as any
-          }
-          isPassword={isPassword}
-          labelStyles={{
-            ...styles.label,
+    const InputStyle = isDisabled
+      ? [
+          styles.disabledInputStyle,
+          {
             backgroundColor: colors.background,
-            color: colors.background,
-          }}
-          containerStyles={StyleSheet.flatten(InputStyle)}
-          aria-disabled={isDisabled}
-          customLabelStyles={{
-            fontSizeFocused: 14,
-            colorFocused: colors.textSecondary,
-            fontSizeBlurred: 18,
-            topFocused: -28,
-          }}
-          //@ts-ignore
-          inputStyles={InputContentStyle}
-          togglePassword={isSecure}
-          onChangeText={onChange}
-          // customShowPasswordComponent={
-          //   <Image
-          //     source={CustomImages.closeEyeIcon}
-          //     style={[styles.iconEye]}
-          //     resizeMode="contain"
-          //   />
-          // }
-          // customHidePasswordComponent={
-          //   <Image
-          //     source={CustomImages.openEye}
-          //     style={[styles.iconEye, styles.openEyeStyle]}
-          //     resizeMode="contain"
-          //   />
-          // }
-          {...inputConfigurations}
-        />
+          },
+        ]
+      : [
+          styles.input,
+          {
+            backgroundColor: colors.background,
+          },
+        ];
 
-        {showIcon && (
-          <Pressable
-            onPress={handleIconAction}
-            style={({pressed}) => [
-              styles.pressableButton,
-              customPressableStyle,
-              pressed && styles.pressed,
-            ]}>
-            <Image
-              source={iconSource}
-              style={[styles.iconEye, iconStyle]}
-              resizeMode="contain"
-            />
-          </Pressable>
-        )}
+    const InputContentStyle = isDisabled
+      ? disabledInputContentStyle
+      : inputContent;
+
+    const inputRef = useRef<any>(null);
+
+    useImperativeHandle(ref, () => ({
+      focus: () => {
+        inputRef.current?.focus?.();
+      },
+      blur: () => {
+        inputRef.current?.blur?.();
+      },
+    }));
+
+    return (
+      <View style={[styles.container, inputBoxStyle]}>
+        <View style={styles.inputContainer}>
+          <FloatingLabelInput
+            ref={inputRef}
+            label={
+              (
+                <Text
+                  style={[
+                    styles.labelText,
+                    {
+                      color: colors.textSecondary,
+                    },
+                  ]}>
+                  {label}
+                </Text>
+              ) as any
+            }
+            isPassword={isPassword}
+            labelStyles={{
+              ...styles.label,
+              backgroundColor: colors.background,
+              color: colors.background,
+            }}
+            containerStyles={StyleSheet.flatten(InputStyle)}
+            aria-disabled={isDisabled}
+            customLabelStyles={{
+              fontSizeFocused: 14,
+              colorFocused: colors.textSecondary,
+              fontSizeBlurred: 18,
+              topFocused: -28,
+            }}
+            //@ts-ignore
+            inputStyles={InputContentStyle}
+            togglePassword={isSecure}
+            onChangeText={onChange}
+            customShowPasswordComponent={
+              <Icon name="eye" size={16} color="#000" />
+            }
+            customHidePasswordComponent={
+              <Icon name="eye-slash" size={16} color="#000" />
+            }
+            {...inputConfigurations}
+          />
+
+          {showIcon && (
+            <Pressable
+              onPress={handleIconAction}
+              style={({pressed}) => [
+                styles.pressableButton,
+                customPressableStyle,
+                pressed && styles.pressed,
+              ]}>
+              <Image
+                source={iconSource}
+                style={[styles.iconEye, iconStyle]}
+                resizeMode="contain"
+              />
+            </Pressable>
+          )}
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 export default CustomInput;
 
@@ -233,13 +220,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     textTransform: 'capitalize',
     fontSize: 18,
-    // fontFamily: Fonts.inter400,
+    fontFamily: Fonts.inter400,
     lineHeight: 16.8,
     color: 'red',
   },
   labelText: {
-    color: 'rgba(250, 250, 250, 0.5)',
-    fontFamily:Fonts.inter700
+    color: colors.textSecondary,
+    fontFamily: Fonts.inter700,
   },
   iconEye: {
     width: 24,

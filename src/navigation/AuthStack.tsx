@@ -18,6 +18,7 @@ export const AuthStack = () => {
         initialRouteName="Login"
         screenOptions={() => ({
           contentStyle: styles.commonContentStyle,
+          headerShown:false
         })}>
         <Stack.Screen
           name="Login"

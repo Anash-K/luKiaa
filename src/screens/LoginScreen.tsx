@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -6,61 +6,76 @@ import {
   Button,
   StyleSheet,
   TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import CustomInput from '../common/CustomInput';
 import CustomButton from '../common/CustumButton';
-import { Fonts } from '../assets/fonts/Customfont';
+import {Fonts} from '../assets/fonts/Customfont';
 import CardWrapper from '../common/CardWrapper';
+import { useCommonStyles } from '../common/CommonStyle';
 
 const LoginScreen = ({navigation}) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const {title} = useCommonStyles();
+  const nameRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  console.log('test');
+
+  const handleLogin = useCallback(() => {
+    console.log('login');
+  }, [name, password]);
+
   return (
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <CardWrapper>
-      <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
-        
-        <CustomInput
-          label="Full Name"
-          value={name}
-          onChange={val => setName(val)}
-        />
+        <View style={styles.container}>
+          <Text style={title}>Registered In Lukiaa</Text>
 
-        <CustomInput
-          label="Password"
-          value={password}
-          onChange={val => setPassword(val)}
-        />
+          <CustomInput
+            label="Full Name"
+            value={name}
+            onChange={val => setName(val)}
+          />
 
-        <View style={styles.signupContainer}>
-          <Text style={styles.note}>Already have an account? <Text style={styles.textbtn}>Log In</Text></Text>
-           <CustomButton title={"Login"} onPress={() => {}} />
+          <CustomInput
+            label="Password"
+            value={password}
+            onChange={val => setPassword(val)}
+            isPassword={true}
+          />
+
+          <View style={styles.signupContainer}>
+            <Text style={styles.note}>
+              Don’t have an account?{' '}
+              <Text
+                style={styles.textbtn}
+                onPress={() => navigation.navigate('Signup')}>
+                Sign Up
+              </Text>
+            </Text>
+            <CustomButton title="Login" onPress={handleLogin} />
+          </View>
         </View>
-      </View>
       </CardWrapper>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  textbtn:{
-    fontFamily:Fonts.
+  textbtn: {
+    fontFamily: Fonts.inter400,
   },
-  note:{
-    fontFamily:Fonts.inter400
+  note: {
+    fontFamily: Fonts.inter400,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
+  
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
