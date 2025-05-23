@@ -1,13 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import { colors } from '../constants/colors';
-
+import {colors} from '../constants/colors';
 
 interface CardWrappertype {
   children: React.ReactNode;
 }
 
-const CardWrapper: React.FC<CardWrappertype> = ({ children }) => {
+const CardWrapper: React.FC<CardWrappertype> = ({children}) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContent}>
@@ -25,8 +24,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5', // Light grey background to match the image
+    backgroundColor: colors.background, // Light grey background to match the image
     padding: 16,
+    paddingHorizontal: 5,
   },
   innerContent: {
     backgroundColor: '#fff',
@@ -34,17 +34,18 @@ const styles = StyleSheet.create({
     padding: 24, // Increased padding for a more spacious look
     width: '90%', // Responsive width
     maxWidth: 400, // Max width to prevent it from being too wide on larger screens
+    paddingHorizontal:5,
 
     // iOS Shadow
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.1,
     shadowRadius: 8,
 
     // Android Shadow
     elevation: 8,
-    borderWidth:1,
-    borderColor:colors.trustBase
+    borderWidth: 1,
+    borderColor: colors.trustBase,
   },
   header: {
     flexDirection: 'row',
