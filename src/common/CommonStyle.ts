@@ -38,8 +38,9 @@ export const useCommonStyles = (): CommonStyles => {
     },
     title: {
       fontSize: 24,
+      lineHeight:29,
       fontFamily: Fonts.poppins600,
-      marginBottom: 24,
+      marginBottom: 18,
       textAlign: 'center',
       color: colors.textPrimary,
     },

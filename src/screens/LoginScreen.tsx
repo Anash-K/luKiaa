@@ -2,97 +2,164 @@ import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
   Alert,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Image,
 } from 'react-native';
 import CustomInput from '../common/CustomInput';
-import CustomButton from '../common/CustumButton';
 import {Fonts} from '../assets/fonts/Customfont';
 import CardWrapper from '../common/CardWrapper';
-import {useCommonStyles} from '../common/CommonStyle';
+import {colors} from '../constants/colors';
+import CustomButton from '../common/CustumButton';
+import {CustomImages} from '../assets/images';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const LoginScreen = ({navigation}) => {
-  const [form, setForm] = useState({name: '', email: '', password: ''});
-  const {title} = useCommonStyles();
-  const nameRef = useRef(null);
+  const [form, setForm] = useState({email: '', password: ''});
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
+  const [isActiveInput, setIsActiveInput] = useState('');
 
   const handleChange = useCallback((field, value) => {
     setForm(prev => ({...prev, [field]: value}));
   }, []);
 
   const handleLogin = useCallback(() => {
-    if (!form.name || !form.email || !form.password) {
+    if (!form.email || !form.password) {
       Alert.alert('Please fill all fields');
       return;
     }
-
-    // Proceed with login logic
     console.log('Login payload:', form);
+    // You can add your API call here
   }, [form]);
 
+  const handleFocus = useCallback((name = '') => {
+    setIsActiveInput(name);
+  }, []);
+
+  const {top, bottom} = useSafeAreaInsets();
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <CardWrapper>
-        <View style={styles.container}>
-          <Text style={title}>Registered In Lukiaa</Text>
-
-          <CustomInput
-            label="Full Name"
-            value={form.name}
-            onChange={val => handleChange('name', val)}
-            ref={nameRef}
-          />
-
-          <CustomInput
-            label="Email/Phone"
-            value={form.email}
-            onChange={val => handleChange('email', val)}
-            ref={emailRef}
-          />
-
-          <CustomInput
-            label="Password"
-            value={form.password}
-            onChange={val => handleChange('password', val)}
-            isPassword
-            ref={passwordRef}
-          />
-
-          <CustomButton
-            title="Sign Up"
-            btnStyle={styles.button}
-            onPress={handleLogin}
-          />
-          <View style={styles.signupContainer}>
-            <Text style={styles.note}>
-              Don’t have an account?{' '}
-              <Text
-                style={styles.textbtn}
-                onPress={() => navigation.navigate('Signup')}>
-                Log In
-              </Text>
+    // <SafeAreaView style={{flex: 1}}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <ScrollView
+        style={[styles.scrollView, {marginTop: top, marginBottom: bottom}]}
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator
+        keyboardShouldPersistTaps="handled">
+        <View style={styles.innerContent}>
+          <View style={styles.header}>
+            <View style={styles.logoBox}>
+              <Image source={CustomImages.logo} style={styles.logo} />
+            </View>
+            <Text style={styles.subtitle}>AI Stylish</Text>
+            <Text style={styles.subtext}>
+              Fast forward fastion, powered by AI
             </Text>
           </View>
+          <CardWrapper>
+            <View style={[styles.container]}>
+              <CustomInput
+                label="Email/Phone"
+                value={form.email}
+                onChange={val => handleChange('email', val)}
+                ref={emailRef}
+                isFocus={isActiveInput === 'email'}
+                isValue={form.email.length > 0}
+                onFocusChange={() => handleFocus('email')}
+                onBlurChange={() => handleFocus()}
+                showIcon
+                iconSource={CustomImages.contact}
+              />
+
+              <CustomInput
+                label="Password"
+                value={form.password}
+                onChange={val => handleChange('password', val)}
+                isPassword
+                ref={passwordRef}
+                isFocus={isActiveInput === 'password'}
+                onFocusChange={() => handleFocus('password')}
+                onBlurChange={() => handleFocus()}
+                iconStyle={{width: 24, height: 24}}
+                isValue={form.password.length > 0}
+              />
+
+              <CustomButton
+                title="Login"
+                btnStyle={styles.button}
+                onPress={handleLogin}
+              />
+
+              <View style={styles.signupContainer}>
+                <Text style={styles.note}>
+                  Don’t have an account?{' '}
+                  <Text
+                    style={styles.textbtn}
+                    onPress={() => navigation.navigate('Signup')}>
+                    Sign up
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          </CardWrapper>
         </View>
-      </CardWrapper>
-    </TouchableWithoutFeedback>
+      </ScrollView>
+    </KeyboardAvoidingView>
+    // </SafeAreaView>
   );
 };
 
-export default LoginScreen;
-
 const styles = StyleSheet.create({
+  innerContent:{
+    justifyContent:'center',
+    marginTop:70
+  },
+  subtext: {
+    fontFamily: Fonts.inter400,
+    color: colors.textSecondary,
+  },
+  subtitle: {
+    fontFamily: Fonts.poppins600,
+    fontSize: 18,
+    lineHeight: 20,
+    color: colors.gradientstartColor,
+  },
+  header: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 16,
+  },
+  logoBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 14,
+  },
+  logo: {
+    width: 70,
+    height: 70,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
   button: {
     marginTop: 16,
   },
   textbtn: {
-    fontFamily: Fonts.inter400,
+    fontFamily: Fonts.inter500,
+    color: colors.gradientendColor,
   },
   note: {
     fontFamily: Fonts.inter400,
@@ -101,19 +168,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 16,
-    borderRadius: 5,
+    paddingBottom: 12,
   },
   signupContainer: {
-    marginTop: 16,
+    marginTop: 10,
     alignItems: 'center',
   },
 });
 
-export default LoginScreen;
+export default React.memo(LoginScreen);

@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -11,10 +10,11 @@ import {
   ImageStyle,
   TextInputProps,
 } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import { colors } from '../constants/colors';
-import { Fonts } from '../assets/fonts/Customfont';
-import { useCommonStyles } from './CommonStyle';
+import {TextInput} from 'react-native-paper';
+import {colors} from '../constants/colors';
+import {Fonts} from '../assets/fonts/Customfont';
+import {useCommonStyles} from './CommonStyle';
+import {CustomImages} from '../assets/images';
 
 interface CustomInputProps {
   value?: string;
@@ -34,6 +34,10 @@ interface CustomInputProps {
   customPressableStyle?: ViewStyle;
   customInputContentStyle?: ViewStyle;
   isDisabled?: boolean;
+  isFocus?: boolean;
+  isValue?: boolean;
+  onFocusChange?: () => void;
+  onBlurChange?: () => void;
 }
 
 const CustomInput = forwardRef<any, CustomInputProps>(
@@ -51,50 +55,101 @@ const CustomInput = forwardRef<any, CustomInputProps>(
       customPressableStyle,
       isDisabled = false,
       value,
+      onFocusChange,
+      onBlurChange,
+      isFocus,
+      isValue,
     },
     ref,
   ) => {
-    const [isSecure] = useState(true);
-    const { disabledInputContentStyle, inputContent } = useCommonStyles();
-    const [isFocused, setIsFocused] = useState(false);
-    const inputRef = useRef<any>(null);
+    const [isSecure, setIsSecure] = useState(isPassword || false);
+    const {inputContent} = useCommonStyles();
+    console.log(isFocus || value?.length > 0 ? 'yes': 'no');
+    
+    // const [isFocused, setIsFocused] = useState(false);
+    // const inputRef = useRef<any>(null);
 
-    useImperativeHandle(ref, () => ({
-      focus: () => inputRef.current?.focus?.(),
-      blur: () => inputRef.current?.blur?.(),
-    }));
+    // useImperativeHandle(ref, () => ({
+    //   focus: () => {
+    //     console.log(`Focusing input: ${label}`);
+    //     inputRef.current?.focus?.();
+    //   },
+    //   blur: () => {
+    //     console.log(`Blurring input: ${label}`);
+    //     inputRef.current?.blur?.();
+    //   },
+    // }));
+
+    const toggleSecureEntry = () => {
+      console.log(`Toggling secure entry for: ${label}`);
+      setIsSecure(prev => !prev);
+      if (handleIconAction) handleIconAction();
+    };
 
     return (
       <View style={[styles.container, inputBoxStyle]}>
         <View style={styles.inputContainer}>
           <View
-            style={[
-              styles.borderShadow,
-              isFocused && styles.focusBorderShadow,
-            ]}>
+            style={[styles.borderShadow, isFocus && styles.focusBorderShadow]}>
             <TextInput
-              ref={inputRef}
+              // ref={inputRef}
+              onFocus={() => {
+                console.log(`Input focused: ${label}`);
+                // setIsFocused(true);
+                if (onFocusChange) onFocusChange();
+              }}
+              onBlur={() => {
+                console.log(`Input blurred: ${label}`);
+                // setIsFocused(false);
+                if (onBlurChange) onBlurChange();
+              }}
               label={label}
+              cursorColor={colors.textSecondary}
               value={value}
               onChangeText={onChange}
-              secureTextEntry={isPassword && isSecure}
+              secureTextEntry={isSecure}
               disabled={isDisabled}
-              style={[styles.newInputStyle, isFocused && styles.onFocusInput]}
-              contentStyle={styles.innerContent}
-              outlineStyle={styles.outline}
+              style={[styles.newInputStyle, isFocus && styles.onFocusInput]}
+              contentStyle={[styles.innerContent, inputContent]}
+              outlineStyle={[
+                styles.outline,
+                isFocus && {borderColor: colors.gradientstartColor},
+              ]}
               mode="outlined"
               theme={{
                 colors: {
-                  primary: isFocused ? 'orange' : colors.trustBase,
+                  primary:
+                    isFocus || value?.length > 0
+                      ? colors.gradientendColor
+                      : colors.trustBase,
+                      
                 },
               }}
               {...inputConfigurations}
             />
 
-            {showIcon && (
+            {isPassword && (
+              <Pressable
+                onPress={toggleSecureEntry}
+                style={({pressed}) => [
+                  styles.pressableButton,
+                  customPressableStyle,
+                  pressed && styles.pressed,
+                ]}>
+                <Image
+                  source={
+                    isSecure ? CustomImages.eyeClose : CustomImages.eyeOpen
+                  }
+                  style={[styles.iconEye, iconStyle]}
+                  resizeMode="contain"
+                  tintColor={colors.textSecondary}
+                />
+              </Pressable>
+            )}
+            {showIcon && !isPassword && (
               <Pressable
                 onPress={handleIconAction}
-                style={({ pressed }) => [
+                style={({pressed}) => [
                   styles.pressableButton,
                   customPressableStyle,
                   pressed && styles.pressed,
@@ -103,6 +158,7 @@ const CustomInput = forwardRef<any, CustomInputProps>(
                   source={iconSource}
                   style={[styles.iconEye, iconStyle]}
                   resizeMode="contain"
+                  tintColor={colors.textSecondary}
                 />
               </Pressable>
             )}
@@ -113,7 +169,6 @@ const CustomInput = forwardRef<any, CustomInputProps>(
   },
 );
 
-// Wrap with React.memo to prevent unnecessary re-renders
 export default React.memo(CustomInput);
 
 const styles = StyleSheet.create({
@@ -132,23 +187,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   focusBorderShadow: {
-    shadowColor: '#800080', // 🟣 Purple
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 4, // Android
+    borderColor: '#e6e3fb',
   },
   borderShadow: {
     flex: 1,
-    borderRadius: 12,
-  },
-  outlineInput: {
-    borderRadius: 10,
-    borderColor: 'rgba(56, 57, 62, 1)',
-    borderWidth: 1,
+    borderRadius: 15,
+    borderWidth: 4,
+    borderColor: colors.white,
   },
   container: {
-    marginVertical: 10,
+    marginVertical: 8,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -159,17 +207,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     fontSize: 16,
     fontFamily: Fonts.inter400,
-    lineHeight: 16.8,
+    lineHeight: 16,
+    paddingRight: 24,
+    alignContent: 'center',
   },
   pressableButton: {
     position: 'absolute',
     right: 10,
     top: '50%',
-    transform: [{ translateY: -12 }],
+    transform: [{translateY: -12}],
   },
   iconEye: {
-    width: 24,
-    height: 24,
+    width: 22,
+    height: 22,
+    alignSelf: 'center',
+    marginTop: 3,
   },
   pressed: {
     opacity: 0.7,

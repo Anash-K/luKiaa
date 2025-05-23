@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   gradient: {
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
