@@ -4,5 +4,8 @@ export const CustomImages = {
   eyeClose: require('./eye-off.png'),
   contact: require('./contact.png'),
   mail: require('./mail.png'),
-  logo: require('./instagram.png'),
+  logo: require('./logo.png'),
+  verifyLogo: require('./user.png'),
+  target: require('./target.png'),
+  flash: require('./flash.png'),
 };

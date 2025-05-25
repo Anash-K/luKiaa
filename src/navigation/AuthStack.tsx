@@ -4,9 +4,14 @@ import {StyleSheet} from 'react-native';
 import {colors} from '../constants/colors';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
+import AccountVerifyScreen from '../screens/AccountVerifyScreen';
+import EngagingScreen from '../screens/EngagingScreen';
+
 export type AuthParams = {
   Login: undefined;
   Signup: undefined;
+  AccountVerify: undefined;
+  EngagingScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<AuthParams>();
@@ -18,18 +23,12 @@ export const AuthStack = () => {
         initialRouteName="Login"
         screenOptions={() => ({
           contentStyle: styles.commonContentStyle,
-          headerShown:false
+          headerShown: false,
         })}>
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{title: 'Login'}}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={SignupScreen}
-          options={{title: 'Signup'}}
-        />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="AccountVerify" component={AccountVerifyScreen} />
+        <Stack.Screen name="EngagingScreen" component={EngagingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -17,25 +17,24 @@ import {colors} from '../constants/colors';
 import CustomButton from '../common/CustumButton';
 import {CustomImages} from '../assets/images';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useCommonStyles} from '../common/CommonStyle';
 
 const LoginScreen = ({navigation}) => {
   const [form, setForm] = useState({email: '', password: ''});
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
   const [isActiveInput, setIsActiveInput] = useState('');
+  const {title} = useCommonStyles();
 
   const handleChange = useCallback((field, value) => {
     setForm(prev => ({...prev, [field]: value}));
   }, []);
 
   const handleLogin = useCallback(() => {
-    if (!form.email || !form.password) {
-      Alert.alert('Please fill all fields');
-      return;
-    }
+    navigation.navigate('AccountVerify');
     console.log('Login payload:', form);
     // You can add your API call here
-  }, [form]);
+  }, [form, navigation]);
 
   const handleFocus = useCallback((name = '') => {
     setIsActiveInput(name);
@@ -117,9 +116,9 @@ const LoginScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  innerContent:{
-    justifyContent:'center',
-    marginTop:70
+  innerContent: {
+    justifyContent: 'center',
+    marginTop: 70,
   },
   subtext: {
     fontFamily: Fonts.inter400,
